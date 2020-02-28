@@ -1,15 +1,45 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+import characterCards from '../components/CharacterCard.vue'
+import comicsCard from '../components/ComicsCard.vue'
+import register from '../components/register.vue'
+import signUp from '../components/SignUp.vue'
+import chat from '../components/chat.vue'
+
 
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/',
-    name: 'Home',
-    component: Home
+    name: 'characterCards',
+    component: characterCards
   },
+
+  {
+    path: '/chat',
+    name: 'chat',
+    component: chat,
+   meta : {
+     requiresAuth: true
+   }
+  },
+  {
+    path: '/register',
+    name: 'register',
+    component: register
+  },
+  {
+    path: '/signup',
+    name: 'signUp',
+    component: signUp
+  },
+  {
+    path: '/:id',
+    name: 'comicsCard',
+    component: comicsCard
+  },
+
   {
     path: '/about',
     name: 'About',

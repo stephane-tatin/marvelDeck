@@ -1,32 +1,107 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
-  </div>
+  <v-app>
+    <v-app-bar app color="black" dark>
+      <v-row justify="space-around" align="center">
+        <div v-on:click="resetRandom" class="d-flex align-center">
+          <router-link :to="slash">
+            <v-img class="mr-2" src="./assets/LogoM.png" width="70" />
+          </router-link>
+        </div>
+
+        <v-btn small color="red" @click="randomNumberApp">
+          <v-icon small>shuffle</v-icon>
+        </v-btn>
+        <input
+          class="white black--text text-center"
+          type="text"
+          v-model="searchApp"
+          placeholder="search"
+        />
+
+        <v-btn small class="mx-2" v-if="loggedIn" color="red" :to="chat">
+          <v-icon small>chat</v-icon>
+        </v-btn>
+        <v-btn small class="mx-2" v-if="!loggedIn" :to="signup" color="red">Log in</v-btn>
+        <v-btn small v-if="loggedIn" @click="logOut" color="red">Log out</v-btn>
+      </v-row>
+    </v-app-bar>
+
+    <v-content>
+      <router-view :randomNumber="randomNumber" :search="searchApp"></router-view>
+    </v-content>
+    <v-footer class="black white--text" app>
+      <v-flex justify="end" class="text-center">Data provided by Marvel. © 2016 Marvel.</v-flex>
+    </v-footer>
+  </v-app>
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+<script>
+import firebase from "firebase";
+export default {
+  name: "App",
+
+  components: {},
+
+  data: () => ({
+    slash: "/",
+    searchApp: "",
+    random: "random",
+    loggedIn: "",
+    signup: "/signup",
+    chat: "/chat",
+    randomNumber: ""
+
+    //
+  }),
+  methods: {
+    logOut: function() {
+      firebase
+        .auth()
+        .signOut()
+        .then(alert("logged out"))
+        .then(() => this.$router.push("/"));
+    },
+
+    randomNumberApp: function() {
+      this.randomNumber = Math.ceil(Math.random() * 100);
+    },
+    resetRandom: function() {
+      this.randomNumber = "";
+    }
+  },
+  mounted() {
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        console.log("signedin");
+        this.loggedIn = true;
+      } else {
+        console.log("signedout");
+        this.loggedIn = false;
+      }
+    });
+  }
+};
+</script>
+
+<style scoped>
+a {
+  text-decoration: none;
+  color: white;
 }
 
-#nav {
-  padding: 30px;
+.v-application a {
+  color: white;
 }
 
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
+input {
+  width: 60px;
+  height: 28px;
+  margin-left: 8px;
+  border-radius: 2%;
 }
 
-#nav a.router-link-exact-active {
-  color: #42b983;
+.v-toolbar__content {
+  padding: 10px;
 }
 </style>
+
