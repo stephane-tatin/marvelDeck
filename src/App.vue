@@ -103,5 +103,11 @@ input {
 .v-toolbar__content {
   padding: 10px;
 }
+
+@media only screen and (min-width: 600px) {
+  #app > div > header > div > div.row.align-center.justify-space-around > a {
+    width: 100px;
+  }
+}
 </style>
 
